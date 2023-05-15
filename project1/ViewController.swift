@@ -12,6 +12,8 @@ class ViewController: UITableViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		title = "Storm Viewer"
+		navigationController?.navigationBar.prefersLargeTitles = true
 		let fm = FileManager.default
 		//iOS apps ALWAYS have a resource path
 		let path = Bundle.main.resourcePath!
@@ -25,6 +27,7 @@ class ViewController: UITableViewController {
 				pictures.append(item)
 			}
 		}
+		pictures.sort()
 	}
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return pictures.count
@@ -32,13 +35,20 @@ class ViewController: UITableViewController {
 	
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "Picture", for: indexPath)
-		cell.textLabel?.text = pictures[indexPath.row]
+		//image name with extension
+		let rawImageName = pictures[indexPath.row]
+		//remove the extension by splitting the image name at the .
+		let imageName = rawImageName.split(separator: ".")[0]
+		//convert the SubString into String
+		cell.textLabel?.text = String(imageName)
 		return cell
 	}
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if let vc = storyboard?.instantiateViewController(withIdentifier: "Detail") as? DetailViewController {
 			vc.selectedImage = pictures[indexPath.row]
+			vc.totalImages = pictures.count
+			vc.selectedImageIndex = indexPath.row + 1
 			navigationController?.pushViewController(vc, animated: true)
 		}
 	}
