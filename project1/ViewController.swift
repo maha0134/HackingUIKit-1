@@ -14,6 +14,7 @@ class ViewController: UITableViewController {
 		super.viewDidLoad()
 		title = "Storm Viewer"
 		navigationController?.navigationBar.prefersLargeTitles = true
+		navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareButtonTapped))
 		let fm = FileManager.default
 		//iOS apps ALWAYS have a resource path
 		let path = Bundle.main.resourcePath!
@@ -51,6 +52,14 @@ class ViewController: UITableViewController {
 			vc.selectedImageIndex = indexPath.row + 1
 			navigationController?.pushViewController(vc, animated: true)
 		}
+	}
+	
+	@objc func shareButtonTapped() {
+		let gitHubRepoURL = "https://github.com/maha0134/HackingUIKit-1"
+		let vc = UIActivityViewController(activityItems: [gitHubRepoURL], applicationActivities: [])
+		vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+		
+		present(vc, animated: true)
 	}
 }
 
